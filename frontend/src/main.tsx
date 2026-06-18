@@ -5,11 +5,13 @@ import App from './App';
 import { LogtoCallback } from './components/LogtoCallback';
 import './App.css';
 
+const logtoApiResource = import.meta.env.VITE_LOGTO_API_RESOURCE?.trim();
+
 const logtoConfig: LogtoConfig = {
   endpoint: import.meta.env.VITE_LOGTO_ENDPOINT || 'http://localhost:3001/',
   appId: import.meta.env.VITE_LOGTO_APP_ID || 'YOUR_APP_ID',
-  resources: [import.meta.env.VITE_LOGTO_API_RESOURCE || 'https://fanme-chat-api'],
-  scopes: ['offline_access', 'chat:internal'],
+  ...(logtoApiResource ? { resources: [logtoApiResource] } : {}),
+  scopes: ['profile', 'email', 'offline_access'],
 };
 
 function Root() {

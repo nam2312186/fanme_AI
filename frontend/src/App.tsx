@@ -50,7 +50,7 @@ const PERMISSION_DENIED_MESSAGE =
   'Tài khoản của bạn chưa được cấp quyền sử dụng chatbot nội bộ. Vui lòng liên hệ quản trị viên và đăng nhập lại sau khi được cấp quyền để hệ thống cập nhật quyền truy cập.';
 
 export default function App() {
-  const resource = import.meta.env.VITE_LOGTO_API_RESOURCE || 'https://fanme-chat-api';
+  const resource = import.meta.env.VITE_LOGTO_API_RESOURCE?.trim() || undefined;
   const { isAuthenticated, isLoading: isAuthLoading, signIn, signOut, getAccessToken } = useLogto();
 
   // Workspace & Session States

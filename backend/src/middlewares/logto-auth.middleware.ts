@@ -1,8 +1,14 @@
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
-import { createRemoteJWKSet, jwtVerify, type JWTPayload } from 'jose';
+
+export type LogtoUserInfo = {
+  sub: string;
+  email?: string;
+  name?: string;
+  [key: string]: unknown;
+};
 
 export type AuthenticatedRequest = Request & {
-  auth?: JWTPayload;
+  auth?: LogtoUserInfo;
 };
 
 function requiredEnv(name: string): string {
@@ -15,10 +21,15 @@ function requiredEnv(name: string): string {
   return value.trim().replace(/\/$/, '');
 }
 
+function optionalEnv(name: string): string {
+  return (process.env[name] || '').trim();
+}
+
 const logtoEndpoint = requiredEnv('LOGTO_ENDPOINT');
-const audience = requiredEnv('LOGTO_API_RESOURCE');
-const issuer = `${logtoEndpoint}/oidc`;
-const jwks = createRemoteJWKSet(new URL(`${issuer}/jwks`));
+const allowedEmailDomains = optionalEnv('ALLOWED_EMAIL_DOMAINS')
+  .split(',')
+  .map((item) => item.trim().toLowerCase().replace(/^@/, ''))
+  .filter(Boolean);
 
 function getBearerToken(req: Request): string | null {
   const header = req.headers.authorization;
@@ -30,17 +41,37 @@ function getBearerToken(req: Request): string | null {
   return token;
 }
 
-function getTokenScopes(payload: JWTPayload): Set<string> {
-  const scope = payload.scope;
+function isAllowedEmail(email?: string): boolean {
+  if (allowedEmailDomains.length === 0) return true;
+  if (!email || !email.includes('@')) return false;
 
-  if (typeof scope !== 'string') {
-    return new Set();
-  }
+  const domain = email.split('@').pop()?.toLowerCase();
+  if (!domain) return false;
 
-  return new Set(scope.split(' ').map((item) => item.trim()).filter(Boolean));
+  return allowedEmailDomains.includes(domain);
 }
 
-export function requireLogtoAuth(requiredScopes: string[] = []): RequestHandler {
+async function fetchLogtoUserInfo(token: string): Promise<LogtoUserInfo> {
+  const response = await fetch(`${logtoEndpoint}/oidc/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Logto userinfo failed: ${response.status}`);
+  }
+
+  const data = await response.json() as Record<string, unknown>;
+
+  if (!data.sub || typeof data.sub !== 'string') {
+    throw new Error('Logto userinfo missing sub');
+  }
+
+  return data as LogtoUserInfo;
+}
+
+export function requireLogtoAuth(_requiredScopes: string[] = []): RequestHandler {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const token = getBearerToken(req);
@@ -52,22 +83,16 @@ export function requireLogtoAuth(requiredScopes: string[] = []): RequestHandler 
         return;
       }
 
-      const { payload } = await jwtVerify(token, jwks, {
-        issuer,
-        audience,
-      });
+      const userInfo = await fetchLogtoUserInfo(token);
 
-      const tokenScopes = getTokenScopes(payload);
-      const missingScopes = requiredScopes.filter((scope) => !tokenScopes.has(scope));
-
-      if (missingScopes.length > 0) {
+      if (!isAllowedEmail(userInfo.email)) {
         res.status(403).json({
-          message: 'Tài khoản của bạn chưa được cấp quyền sử dụng chatbot nội bộ. Vui lòng liên hệ quản trị viên và đăng nhập lại sau khi được cấp quyền để hệ thống cập nhật quyền truy cập.',
+          message: 'Email của bạn không thuộc domain được phép sử dụng chatbot nội bộ FanMe.',
         });
         return;
       }
 
-      (req as AuthenticatedRequest).auth = payload;
+      (req as AuthenticatedRequest).auth = userInfo;
       next();
     } catch (error) {
       console.error('Logto auth error:', error);

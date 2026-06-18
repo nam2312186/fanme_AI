@@ -6,7 +6,7 @@ import { requireLogtoAuth, AuthenticatedRequest } from '../middlewares/logto-aut
 import { getDefaultWorkspaceSlug, normalizeWorkspaceSlug } from '../config/workspaces.js';
 
 export const chatRouter = Router();
-const CHAT_INTERNAL_SCOPES = ['chat:internal'];
+const CHAT_INTERNAL_SCOPES: string[] = [];
 
 function singleQueryValue(value: unknown): string | undefined {
   if (typeof value === 'string') {
@@ -32,7 +32,7 @@ function touchSession(sessionId: string): void {
 }
 
 // GET /api/chat/workspaces - List shared + user's own workspaces
-chatRouter.get('/workspaces', requireLogtoAuth(), async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+chatRouter.get('/workspaces', requireLogtoAuth(CHAT_INTERNAL_SCOPES), async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const logtoUserId = req.auth?.sub;
   if (!logtoUserId) { res.status(401).json({ message: 'Unauthorized' }); return; }
 
@@ -55,7 +55,7 @@ chatRouter.get('/workspaces', requireLogtoAuth(), async (req: AuthenticatedReque
 });
 
 // POST /api/chat/workspaces - Create private workspace for user
-chatRouter.post('/workspaces', requireLogtoAuth(), async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+chatRouter.post('/workspaces', requireLogtoAuth(CHAT_INTERNAL_SCOPES), async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const logtoUserId = req.auth?.sub;
   if (!logtoUserId) { res.status(401).json({ message: 'Unauthorized' }); return; }
 
@@ -102,7 +102,7 @@ chatRouter.post('/workspaces', requireLogtoAuth(), async (req: AuthenticatedRequ
 });
 
 // PATCH /api/chat/workspaces/:slug - Rename workspace (only user's own)
-chatRouter.patch('/workspaces/:slug', requireLogtoAuth(), async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+chatRouter.patch('/workspaces/:slug', requireLogtoAuth(CHAT_INTERNAL_SCOPES), async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const logtoUserId = req.auth?.sub;
   if (!logtoUserId) { res.status(401).json({ message: 'Unauthorized' }); return; }
 
@@ -150,7 +150,7 @@ chatRouter.patch('/workspaces/:slug', requireLogtoAuth(), async (req: Authentica
 });
 
 // DELETE /api/chat/workspaces/:slug - Delete workspace (only user's own)
-chatRouter.delete('/workspaces/:slug', requireLogtoAuth(), async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+chatRouter.delete('/workspaces/:slug', requireLogtoAuth(CHAT_INTERNAL_SCOPES), async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const logtoUserId = req.auth?.sub;
   if (!logtoUserId) { res.status(401).json({ message: 'Unauthorized' }); return; }
 
