@@ -1,0 +1,313 @@
+.sidebar {
+  width: 300px;
+  height: 100%;
+  min-height: 0;
+  background: var(--panel-bg, rgba(255, 255, 255, 0.86));
+  border: 1px solid var(--panel-border, rgba(15, 23, 42, 0.09));
+  border-radius: 22px;
+  overflow: hidden;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-panel, 0 18px 55px rgba(15, 23, 42, 0.08));
+  backdrop-filter: var(--glass-blur, blur(18px));
+  -webkit-backdrop-filter: var(--glass-blur, blur(18px));
+}
+
+.sidebar-header {
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+}
+
+.sidebar-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.new-chat-btn {
+  flex: 1;
+  width: auto;
+  padding: 11px 14px;
+  background: linear-gradient(135deg, var(--primary, #2563eb), var(--accent, #14b8a6));
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+  box-shadow: 0 10px 24px var(--primary-glow, rgba(37, 99, 235, 0.18));
+}
+
+.new-chat-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px var(--primary-glow, rgba(37, 99, 235, 0.2));
+}
+
+.new-chat-btn:active {
+  transform: translateY(0);
+}
+
+.sidebar-section {
+  flex: 0 0 auto;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+  overflow-y: auto;
+}
+
+.sidebar-section + .sidebar-section {
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar-section:last-of-type {
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-dim, #667085);
+  padding: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 12px;
+  gap: 8px;
+}
+
+.workspace-add-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  background: var(--primary-soft, rgba(37, 99, 235, 0.1));
+  color: var(--primary, #2563eb);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.workspace-add-btn:hover {
+  background: rgba(37, 99, 235, 0.16);
+}
+
+.workspace-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 8px;
+}
+
+.workspace-item {
+  display: flex;
+  align-items: center;
+  padding: 9px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: var(--text, #2d3748);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.workspace-item:hover {
+  background: var(--primary-soft, rgba(37, 99, 235, 0.1));
+  border-color: rgba(37, 99, 235, 0.18);
+}
+
+.workspace-item.active {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(20, 184, 166, 0.1));
+  border-color: rgba(37, 99, 235, 0.32);
+  color: var(--primary, #2563eb);
+  font-weight: 600;
+}
+
+.workspace-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.workspace-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+.workspace-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspace-actions {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.workspace-item:hover .workspace-actions {
+  opacity: 1;
+}
+
+.session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 8px;
+}
+
+.session-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+.session-item:hover {
+  background: var(--primary-soft, rgba(37, 99, 235, 0.1));
+  border-color: rgba(37, 99, 235, 0.18);
+}
+
+.session-item.active {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(37, 99, 235, 0.28);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+}
+
+.session-title-wrapper {
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.session-title {
+  display: block;
+  font-size: 13px;
+  color: var(--text, #2d3748);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-item.active .session-title {
+  color: var(--primary, #2563eb);
+  font-weight: 600;
+}
+
+.session-actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.session-item:hover .session-actions {
+  opacity: 1;
+}
+
+.session-btn {
+  padding: 4px 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim, #667085);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.session-btn:hover {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--primary, #2563eb);
+}
+
+.session-btn.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.no-sessions {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--text-dim, #667085);
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 14px 16px;
+  border-top: 1px solid rgba(15, 23, 42, 0.07);
+  display: flex;
+  justify-content: center;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary, #2563eb), var(--accent, #14b8a6));
+  color: white;
+  border: none;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 18px var(--primary-glow, rgba(37, 99, 235, 0.18));
+}
+
+.user-avatar:active {
+  transform: scale(0.98);
+}
+
+/* Scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(37, 99, 235, 0.18);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(37, 99, 235, 0.34);
+}
