@@ -2,6 +2,7 @@ import { useLogto } from '@logto/react';
 import type { ChatMessage as ChatMessageType } from '../types';
 import { parseThinking } from '../utils/parseThinking';
 import { ThinkingBlock } from './ThinkingBlock';
+import { MessageContent } from './MessageContent';
 import assistantLogo from '../assets/logo.png';
 
 export function ChatMessage({ message }: { message: ChatMessageType }) {
@@ -31,7 +32,7 @@ export function ChatMessage({ message }: { message: ChatMessageType }) {
                 isStreaming={!parsed.isThinkingComplete}
               />
             )}
-            {parsed.response && <p>{parsed.response}</p>}
+            {parsed.response && <MessageContent content={parsed.response} />}
           </>
         )}
 
