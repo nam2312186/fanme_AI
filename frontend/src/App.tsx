@@ -58,7 +58,9 @@ export default function App() {
   const [activeWorkspaceSlug, setActiveWorkspaceSlug] = useState<string>('internal');
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
-  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(() => (
+    typeof window === 'undefined' ? true : window.innerWidth > 768
+  ));
 
   // Chat States
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
@@ -512,7 +514,7 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${isSidebarVisible ? 'sidebar-open' : 'sidebar-closed'}`}>
       {!isSidebarVisible && (
         <button
           type="button"
@@ -521,33 +523,50 @@ export default function App() {
           aria-pressed={isSidebarVisible}
           title="Hiện sidebar"
         >
-          ›
+          <span>☰</span>
         </button>
       )}
 
       {isSidebarVisible && (
-        <Sidebar
-          workspaces={workspaces}
-          activeWorkspaceSlug={activeWorkspaceSlug}
-          sessions={sessions}
-          activeSessionId={currentSessionId || ''}
-          onNewChat={handleNewChat}
-          onCreateWorkspace={handleCreateWorkspace}
-          onToggleSidebar={toggleSidebar}
-          isSidebarVisible={isSidebarVisible}
-          onSelectWorkspace={handleSelectWorkspace}
-          onRenameWorkspace={handleRenameWorkspace}
-          onDeleteWorkspace={handleDeleteWorkspace}
-          onSelectSession={handleSelectSession}
-          onRenameSession={handleRenameSession}
-          onDeleteSession={handleDeleteSession}
-          onProfileClick={() => signOut(window.location.origin)}
-          isAuthenticated={isAuthenticated}
-        />
+        <>
+          <button
+            type="button"
+            className="sidebar-backdrop"
+            onClick={toggleSidebar}
+            aria-label="Đóng sidebar"
+          />
+          <Sidebar
+            workspaces={workspaces}
+            activeWorkspaceSlug={activeWorkspaceSlug}
+            sessions={sessions}
+            activeSessionId={currentSessionId || ''}
+            onNewChat={handleNewChat}
+            onCreateWorkspace={handleCreateWorkspace}
+            onToggleSidebar={toggleSidebar}
+            isSidebarVisible={isSidebarVisible}
+            onSelectWorkspace={handleSelectWorkspace}
+            onRenameWorkspace={handleRenameWorkspace}
+            onDeleteWorkspace={handleDeleteWorkspace}
+            onSelectSession={handleSelectSession}
+            onRenameSession={handleRenameSession}
+            onDeleteSession={handleDeleteSession}
+            onProfileClick={() => signOut(window.location.origin)}
+            isAuthenticated={isAuthenticated}
+          />
+        </>
       )}
 
       <main className="chat-container">
         <header className="chat-header">
+          <button
+            type="button"
+            className="mobile-menu-btn"
+            onClick={toggleSidebar}
+            aria-label="Mở sidebar"
+            title="Mở sidebar"
+          >
+            ☰
+          </button>
           <h2>
             FanMe <span>AI</span>
             {activeWorkspace && (

@@ -54,7 +54,6 @@ A: Chào bạn! Mình có thể hỗ trợ các thông tin liên quan đến Fan
 
 Q: ai phụ trách backend
 A: Theo thông tin nội bộ FanMe:
-- Tú Nguyễn — Dev Backend (Freelance)
 - Vũ Đức — Dev Backend (Freelance)
 Cả hai báo cáo cho Thiện (Product Manager).
 

@@ -53,7 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             aria-pressed={isSidebarVisible}
             title={isSidebarVisible ? 'Ẩn sidebar' : 'Hiện sidebar'}
           >
-            {isSidebarVisible ? '›' : '‹'}
+            {isSidebarVisible ? '×' : '☰'}
           </button>
         </div>
       </div>
