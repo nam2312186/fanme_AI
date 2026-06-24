@@ -84,6 +84,12 @@ export default function App() {
     [input, loading]
   );
 
+  function closeSidebarOnMobile() {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      setIsSidebarVisible(false);
+    }
+  }
+
   async function getAccessTokenOrThrow(): Promise<string> {
     const token = await getAccessToken(resource);
 
@@ -220,6 +226,7 @@ export default function App() {
       setSessions((prev) => [session, ...prev]);
       setCurrentSessionId(session.id);
       setMessages([]);
+      closeSidebarOnMobile();
     } catch (err) {
       if (isForbiddenError(err)) {
         showPermissionDenied();
@@ -232,6 +239,7 @@ export default function App() {
 
   const handleSelectWorkspace = (slugFromSidebar: string) => {
     setActiveWorkspaceSlug(slugFromSidebar);
+    closeSidebarOnMobile();
     // Sessions will auto-load via useEffect
   };
 
@@ -293,6 +301,7 @@ export default function App() {
         const created = await createWorkspace(token, name.trim());
         setWorkspaces((prev) => [...prev, created]);
         setActiveWorkspaceSlug(created.slug);
+        closeSidebarOnMobile();
       } catch (err) {
         console.error('Failed to create workspace:', err);
       }
@@ -301,6 +310,7 @@ export default function App() {
 
   const handleSelectSession = (sessionId: string) => {
     setCurrentSessionId(sessionId);
+    closeSidebarOnMobile();
   };
 
   const handleAuthAction = () => {
